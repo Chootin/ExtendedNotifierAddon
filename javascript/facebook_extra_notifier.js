@@ -4,9 +4,7 @@ var personClass = "_42fz";
 var nameSubClass = "_55lr";
 var statusContainerClass = "_568z";
 
-var notificationOptions = {
-	//icon: "chrome-extension://graphics/facebook_notifier_icon.png"
-};
+//icon: "chrome-extension://graphics/facebook_notifier_icon.png"
 
 window.addEventListener('load', function () {
 	window.setTimeout(initialize, checkTime);
@@ -23,7 +21,7 @@ function loop() {
 	for (var i in currentlyOnline) {
 		var name = currentlyOnline[i];
 		if (!onlineList.includes(name)) {
-			notify(name + " is online!");
+			notify("Facebook Extended Notifier", name + " has come online!");
 		}
 	}
 	
@@ -32,7 +30,7 @@ function loop() {
 	window.setTimeout(loop, checkTime);
 }
 
-function notify(string) {
+function notify(header, body) {
 	if (Notification.permission !== "granted") {
 		if (Notification.permission === "denied") {
 			window.alert("You must construct additional permissions!");
@@ -46,7 +44,10 @@ function notify(string) {
 	}
 	
 	if (Notification.permission === "granted") {
-		var notification = new Notification(string, notificationOptions);
+		var notificationOptions = {
+			body: body
+		};
+		var notification = new Notification(header, notificationOptions);
 	}
 }
 

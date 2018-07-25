@@ -1,4 +1,4 @@
-# Facebook Notifier Addon
+# Facebook Extended Notifier Addon
 An add-on for Google Chrome which notifies you when a friend comes online.
 
 ## Notes:
