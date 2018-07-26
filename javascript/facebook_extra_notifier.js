@@ -16,7 +16,6 @@ window.addEventListener('load', function () {
 });
 
 function restoreData(data) {
-	console.log(data);
 	whitelistEnabled = data.whitelistEnabled;
 	whitelist = data.whitelist;
 	blacklistEnabled = data.blacklistEnabled;
@@ -45,7 +44,6 @@ function loop() {
 
 function filterResults(results) {
 	if (whitelistEnabled || blacklistEnabled) {
-		console.log(results);
 		for (var i = 0; i < results.length; i++) {
 			var name = results[i];
 			if (whitelistEnabled) {
