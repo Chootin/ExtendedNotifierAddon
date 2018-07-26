@@ -1,23 +1,36 @@
+var whitelistEnabled = false;
+var whitelist = [];
+var blacklistEnabled = false;
+var blacklist = [];
+
 var onlineList = [];
-var checkTime = 10000;
+var checkTime = 5000;
 var personClass = "_42fz";
 var nameSubClass = "_55lr";
 var statusContainerClass = "_568z";
-
-//icon: "chrome-extension://graphics/facebook_notifier_icon.png"
+var notificationIcon = chrome.extension.getURL('graphics/facebook_notifier_icon.png');
 
 window.addEventListener('load', function () {
+	chrome.storage.sync.get({whitelistEnabled: false, whitelist: [], blacklistEnabled: false, blacklist: []}, restoreData);
 	window.setTimeout(initialize, checkTime);
 });
 
+function restoreData(data) {
+	console.log(data);
+	whitelistEnabled = data.whitelistEnabled;
+	whitelist = data.whitelist;
+	blacklistEnabled = data.blacklistEnabled;
+	blacklist = data.blacklist;
+}
+
 function initialize() {
-	onlineList = checkOnline();
+	onlineList = filterResults(checkOnline());
 	console.log("Already online: " + onlineList);
 	window.setTimeout(loop, checkTime);
 }
 
 function loop() {
-	var currentlyOnline = checkOnline();
+	var currentlyOnline = filterResults(checkOnline());
 	for (var i in currentlyOnline) {
 		var name = currentlyOnline[i];
 		if (!onlineList.includes(name)) {
@@ -28,6 +41,31 @@ function loop() {
 	onlineList = currentlyOnline;
 	
 	window.setTimeout(loop, checkTime);
+}
+
+function filterResults(results) {
+	if (whitelistEnabled || blacklistEnabled) {
+		console.log(results);
+		for (var i = 0; i < results.length; i++) {
+			var name = results[i];
+			if (whitelistEnabled) {
+				if (!whitelist.includes(name)) {
+					results.splice(i, 1);
+					i--;
+					continue;
+				}
+			}
+			
+			if (blacklistEnabled) {
+				if (blacklist.includes(name)) {
+					results.splice(i, 1);
+					i--;
+					continue;
+				}
+			}
+		}
+	}
+	return results;
 }
 
 function notify(header, body) {
@@ -45,7 +83,8 @@ function notify(header, body) {
 	
 	if (Notification.permission === "granted") {
 		var notificationOptions = {
-			body: body
+			body: body,
+			icon: notificationIcon
 		};
 		var notification = new Notification(header, notificationOptions);
 	}

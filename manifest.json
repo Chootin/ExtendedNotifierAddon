@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Facebook Extra Notifier",
-    "version": "1.0",
+    "version": "1.1",
     "page_action": {
         "default_icon": "graphics/facebook_icon_32.png",
         "default_title": "Facebook Extra Notifier"
@@ -14,11 +14,11 @@
             "js": ["javascript/facebook_extra_notifier.js"]
         }
     ],
-    "background": {
-        "scripts": []
-    },
     "permissions": [
+		"storage"
     ],
+	"web_accessible_resources": ["graphics/facebook_notifier_icon.png"],
+    "options_page": "html/options.html",
     "icons": {
         "16": "graphics/facebook_icon_16.png",
         "32": "graphics/facebook_icon_32.png",

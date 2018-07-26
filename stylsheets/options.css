@@ -1,0 +1,12 @@
+#whitelistContainer, #blacklistContainer {
+	display: none;
+}
+
+#whitelistEnabledCheckbox:checked~#whitelistContainer,
+#blacklistEnabledCheckbox:checked~#blacklistContainer {
+	display: block;
+}
+
+#saveDiv {
+	margin-top: 20px;
+}

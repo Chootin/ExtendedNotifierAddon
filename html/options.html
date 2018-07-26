@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Facebook Extended Notifier</title>
+		<link rel="stylesheet" type="text/css" href="../stylsheets/options.css">
+    </head>
+    <body>
+		<div>
+			<input type="checkbox" id="whitelistEnabledCheckbox">
+			<label for="whitelistEnabledCheckbox">Enable Whitelist</label>
+			<div id="whitelistContainer">
+				<h2>Enter names to whitelist separated by commas.</h2>
+				<h3>E.g. John Smith,Mary Sue</h3>
+				<textarea id="whitelistInput" cols="80"></textarea>
+			</div>
+		</div>
+		<div>
+			<input type="checkbox" id="blacklistEnabledCheckbox">
+			<label for="blacklistEnabledCheckbox">Enable Blacklist</label>
+			<div id="blacklistContainer">
+				<h2>Enter names to blacklist separated by commas.</h2>
+				<h3>E.g. John Smith,Mary Sue</h3>
+				<textarea id="blacklistInput" cols="80"></textarea>
+			</div>
+		</div>
+		<div id="saveDiv">
+			<button id="save">Save Changes</button>
+		</div>
+        <script src="../javascript/options.js"></script>
+    </body>
+</html>
