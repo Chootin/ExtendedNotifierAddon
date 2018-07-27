@@ -3,16 +3,17 @@ var whitelist = [];
 var blacklistEnabled = false;
 var blacklist = [];
 
+var addonName = "Facebook Extended Notifier";
 var onlineList = [];
 var checkTime = 5000;
 var personClass = "_42fz";
 var nameSubClass = "_55lr";
 var statusContainerClass = "_568z";
+var imageClass = "_1gyw _55lt";
 var notificationIcon = chrome.extension.getURL('graphics/facebook_notifier_icon.png');
 
 window.addEventListener('load', function () {
 	chrome.storage.sync.get({whitelistEnabled: false, whitelist: [], blacklistEnabled: false, blacklist: []}, restoreData);
-	window.setTimeout(initialize, checkTime);
 });
 
 function restoreData(data) {
@@ -20,10 +21,14 @@ function restoreData(data) {
 	whitelist = data.whitelist;
 	blacklistEnabled = data.blacklistEnabled;
 	blacklist = data.blacklist;
+	
+	//Data acquired. Let's get to it.
+	window.setTimeout(initialize, checkTime);
 }
 
 function initialize() {
-	onlineList = filterResults(checkOnline());
+	onlineList = getNameListFromResults(filterResults(checkOnline()));
+	notify(addonName, "Facebook Extended Notifier Active.", notificationIcon);
 	console.log("Already online: " + onlineList);
 	window.setTimeout(loop, checkTime);
 }
@@ -31,23 +36,33 @@ function initialize() {
 function loop() {
 	var currentlyOnline = filterResults(checkOnline());
 	for (var i in currentlyOnline) {
-		var name = currentlyOnline[i];
-		if (!onlineList.includes(name)) {
-			notify("Facebook Extended Notifier", name + " has come online!");
+		var result = currentlyOnline[i];
+		if (!onlineList.includes(result.name)) {
+			notify(addonName, result.name + " has come online!", result.image);
 		}
 	}
 	
-	onlineList = currentlyOnline;
+	onlineList = getNameListFromResults(currentlyOnline);
 	
 	window.setTimeout(loop, checkTime);
+}
+
+function getNameListFromResults(results) {
+	var names = [];
+	
+	for (var i in results) {
+		names.push(results[i].name);
+	}
+	
+	return names;
 }
 
 function filterResults(results) {
 	if (whitelistEnabled || blacklistEnabled) {
 		for (var i = 0; i < results.length; i++) {
-			var name = results[i];
+			var result = results[i];
 			if (whitelistEnabled) {
-				if (!whitelist.includes(name)) {
+				if (!whitelist.includes(result.name)) {
 					results.splice(i, 1);
 					i--;
 					continue;
@@ -55,7 +70,7 @@ function filterResults(results) {
 			}
 			
 			if (blacklistEnabled) {
-				if (blacklist.includes(name)) {
+				if (blacklist.includes(result.name)) {
 					results.splice(i, 1);
 					i--;
 					continue;
@@ -66,7 +81,7 @@ function filterResults(results) {
 	return results;
 }
 
-function notify(header, body) {
+function notify(header, body, imageUrl) {
 	if (Notification.permission !== "granted") {
 		if (Notification.permission === "denied") {
 			window.alert("You must construct additional permissions!");
@@ -82,7 +97,7 @@ function notify(header, body) {
 	if (Notification.permission === "granted") {
 		var notificationOptions = {
 			body: body,
-			icon: notificationIcon
+			icon: imageUrl
 		};
 		var notification = new Notification(header, notificationOptions);
 	}
@@ -105,8 +120,9 @@ function checkOnline() {
 			
 			if (online) {
 				var nameEl = personEl.getElementsByClassName(nameSubClass)[0];
+				var imageUrl = personEl.getElementsByClassName(imageClass)[0].getElementsByTagName("img")[0].src;
 				if (nameEl.childElementCount == 0) {
-					onlinePersons.push(nameEl.innerHTML);
+					onlinePersons.push({name: nameEl.innerHTML, image: imageUrl});
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Facebook Extra Notifier",
-    "version": "1.1",
+    "version": "1.2",
     "page_action": {
         "default_icon": "graphics/facebook_icon_32.png",
         "default_title": "Facebook Extra Notifier"
