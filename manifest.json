@@ -1,17 +1,17 @@
 {
     "manifest_version": 2,
-    "name": "Facebook Extra Notifier",
-    "version": "1.2",
+    "name": "Facebook Extended Notifier",
+    "version": "1.4",
     "page_action": {
-        "default_icon": "graphics/facebook_icon_32.png",
-        "default_title": "Facebook Extra Notifier"
+        "default_icon": "graphics/facebook_notifier_icon_32.png",
+        "default_title": "Facebook Extended Notifier"
     },
     "content_scripts": [
         {
             "matches": [
                 "https://www.facebook.com/*"
             ],
-            "js": ["javascript/facebook_extra_notifier.js"]
+            "js": ["javascript/facebook_extended_notifier.js"]
         }
     ],
     "permissions": [
@@ -20,10 +20,12 @@
 	"web_accessible_resources": ["graphics/facebook_notifier_icon.png"],
     "options_page": "html/options.html",
     "icons": {
-        "16": "graphics/facebook_icon_16.png",
-        "32": "graphics/facebook_icon_32.png",
-        "48": "graphics/facebook_icon_48.png",
-        "64": "graphics/facebook_icon_64.png",
-        "128": "graphics/facebook_icon_128.png"
-    }
+        "16": "graphics/facebook_notifier_icon_16.png",
+        "32": "graphics/facebook_notifier_icon_32.png",
+        "48": "graphics/facebook_notifier_icon_48.png",
+        "64": "graphics/facebook_notifier_icon_64.png",
+        "96": "graphics/facebook_notifier_icon_96.png",
+        "128": "graphics/facebook_notifier_icon_128.png"
+    },
+	"author": "Alec 'Chootin' Tutin"
 }

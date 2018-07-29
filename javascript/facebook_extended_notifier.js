@@ -38,7 +38,7 @@ function loop() {
 	for (var i in currentlyOnline) {
 		var result = currentlyOnline[i];
 		if (!onlineList.includes(result.name)) {
-			notify(addonName, result.name + " has come online!", result.image);
+			notify(addonName, result.name + " is online!", result.image);
 		}
 	}
 	
