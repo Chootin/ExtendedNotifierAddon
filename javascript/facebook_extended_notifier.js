@@ -1,3 +1,5 @@
+"use strict";
+
 var whitelistEnabled = false;
 var whitelist = [];
 var blacklistEnabled = false;
@@ -12,8 +14,17 @@ var statusContainerClass = "_568z";
 var imageClass = "_1gyw _55lt";
 var notificationIcon = chrome.extension.getURL('graphics/facebook_notifier_icon.png');
 
+window.addEventListener("beforeunload", function(e) {
+	chrome.runtime.sendMessage({text: 'My watch has ended.'}, undefined);
+}, false);
+
 window.addEventListener('load', function () {
-	chrome.storage.sync.get({whitelistEnabled: false, whitelist: [], blacklistEnabled: false, blacklist: []}, restoreData);
+	chrome.runtime.sendMessage({text: 'Should I be watching?'}, function (response) {
+		if (response.watch) {
+
+			chrome.storage.sync.get({whitelistEnabled: false, whitelist: [], blacklistEnabled: false, blacklist: []}, restoreData);
+		}
+	});
 });
 
 function restoreData(data) {
@@ -21,7 +32,7 @@ function restoreData(data) {
 	whitelist = data.whitelist;
 	blacklistEnabled = data.blacklistEnabled;
 	blacklist = data.blacklist;
-	
+
 	//Data acquired. Let's get to it.
 	window.setTimeout(initialize, checkTime);
 }
@@ -41,19 +52,19 @@ function loop() {
 			notify(addonName, result.name + " is online!", result.image);
 		}
 	}
-	
+
 	onlineList = getNameListFromResults(currentlyOnline);
-	
+
 	window.setTimeout(loop, checkTime);
 }
 
 function getNameListFromResults(results) {
 	var names = [];
-	
+
 	for (var i in results) {
 		names.push(results[i].name);
 	}
-	
+
 	return names;
 }
 
@@ -68,7 +79,7 @@ function filterResults(results) {
 					continue;
 				}
 			}
-			
+
 			if (blacklistEnabled) {
 				if (blacklist.includes(result.name)) {
 					results.splice(i, 1);
@@ -86,14 +97,14 @@ function notify(header, body, imageUrl) {
 		if (Notification.permission === "denied") {
 			window.alert("You must construct additional permissions!");
 		}
-		
+
 		Notification.requestPermission(function (permission) {
 			if (permission === "granted") {
 				var notification = new Notification("Notification permission granted!");
 			}
 		});
 	}
-	
+
 	if (Notification.permission === "granted") {
 		var notificationOptions = {
 			body: body,
@@ -112,12 +123,12 @@ function checkOnline() {
 		if (personEl.getElementsByClassName) {
 			var statusEl = personEl.getElementsByClassName(statusContainerClass)[0];
 			var online = false;
-			
+
 			try {
 				online = statusEl.getElementsByTagName("span").length == 1;
 			} catch {
 			}
-			
+
 			if (online) {
 				var nameEl = personEl.getElementsByClassName(nameSubClass)[0];
 				var imageUrl = personEl.getElementsByClassName(imageClass)[0].getElementsByTagName("img")[0].src;
@@ -127,6 +138,6 @@ function checkOnline() {
 			}
 		}
 	}
-	
+
 	return onlinePersons;
 }

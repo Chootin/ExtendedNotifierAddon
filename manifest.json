@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Facebook Extended Notifier",
-    "version": "1.4",
+    "version": "1.5",
     "page_action": {
         "default_icon": "graphics/facebook_notifier_icon_32.png",
         "default_title": "Facebook Extended Notifier"
@@ -14,6 +14,10 @@
             "js": ["javascript/facebook_extended_notifier.js"]
         }
     ],
+    "background": {
+        "scripts": ["javascript/background.js"],
+        "persistent": true
+    },
     "permissions": [
 		"storage"
     ],
