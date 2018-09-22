@@ -5,8 +5,11 @@ var whitelist = [];
 var blacklistEnabled = false;
 var blacklist = [];
 
+var notifyTimeout = 120;
+
 var addonName = "Facebook Extended Notifier";
 var onlineList = [];
+var recentNotifications = [];
 var checkTime = 5000;
 var personClass = "_42fz";
 var nameSubClass = "_55lr";
@@ -45,17 +48,60 @@ function initialize() {
 }
 
 function loop() {
+	cleanRecentNotifyList();
+	var time = getTime();
+
 	var currentlyOnline = filterResults(checkOnline());
 	for (var i in currentlyOnline) {
 		var result = currentlyOnline[i];
 		if (!onlineList.includes(result.name)) {
-			notify(addonName, result.name + " is online!", result.image);
+			if (shouldNotify(result.name)) {
+				notify(addonName, result.name + " is online!", result.image);
+				recentNotifications.push({name: result.name, time: time});
+			} else {
+
+			}
 		}
 	}
 
 	onlineList = getNameListFromResults(currentlyOnline);
 
 	window.setTimeout(loop, checkTime);
+}
+
+function updateNotifyTimestamp(name) {
+	for (var index in recentNotifications) {
+		var recentNotification = recentNotifications[index];
+		if (recentNotification.name === name) {
+			recentNotification.time = getTime();
+			return;
+		}
+	}
+}
+
+function cleanRecentNotifyList() {
+	var tooSoon = getTime() - notifyTimeout;
+	for (var i = recentNotifications.length - 1; i >= 0; i--) {
+		if (recentNotifications[i].time < tooSoon) {
+			recentNotifications.splice(i, 1);
+		}
+	}
+}
+
+function getTime() {
+	return new Date().getTime() / 1000.0;
+}
+
+function shouldNotify(name, updateTimestamps) {
+	var time = getTime();
+	for (var index in recentNotifications) {
+		var recentNotification = recentNotifications[index];
+		if (recentNotification.name === name) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function getNameListFromResults(results) {
