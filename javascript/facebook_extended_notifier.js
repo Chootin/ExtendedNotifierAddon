@@ -10,6 +10,7 @@ var notifyTimeout = 120;
 var addonName = "Facebook Extended Notifier";
 var onlineList = [];
 var recentNotifications = [];
+var unseenNotifications = [];
 var checkTime = 5000;
 var personClass = "_42fz";
 var nameSubClass = "_55lr";
@@ -24,7 +25,6 @@ window.addEventListener("beforeunload", function(e) {
 window.addEventListener('load', function () {
 	chrome.runtime.sendMessage({text: 'Should I be watching?'}, function (response) {
 		if (response.watch) {
-
 			chrome.storage.sync.get({whitelistEnabled: false, whitelist: [], blacklistEnabled: false, blacklist: []}, restoreData);
 		}
 	});
@@ -52,14 +52,14 @@ function loop() {
 	var time = getTime();
 
 	var currentlyOnline = filterResults(checkOnline());
-	for (var i in currentlyOnline) {
-		var result = currentlyOnline[i];
+	for (var index in currentlyOnline) {
+		var result = currentlyOnline[index];
 		if (!onlineList.includes(result.name)) {
 			if (shouldNotify(result.name)) {
-				notify(addonName, result.name + " is online!", result.image);
-				recentNotifications.push({name: result.name, time: time});
-			} else {
-
+				unseenNotifications.push(result.name);
+				var notification = notify(addonName, result.name + " is online!", result.image);
+				notification.name = result.name;
+				notification.onshow = notificationSpotted;
 			}
 		}
 	}
@@ -67,6 +67,19 @@ function loop() {
 	onlineList = getNameListFromResults(currentlyOnline);
 
 	window.setTimeout(loop, checkTime);
+}
+
+function notificationSpotted(event) {
+	var name = event.target.name;
+	var notifiedTime = getTime();
+	for (var index in unseenNotifications) {
+		var notification = unseenNotifications[index];
+		if (name === unseenNotifications[index]) {
+			unseenNotifications.splice(index, 1);
+			recentNotifications.push({name: name, time: notifiedTime});
+			break;
+		}
+	}
 }
 
 function updateNotifyTimestamp(name) {
@@ -97,6 +110,12 @@ function shouldNotify(name, updateTimestamps) {
 	for (var index in recentNotifications) {
 		var recentNotification = recentNotifications[index];
 		if (recentNotification.name === name) {
+			return false;
+		}
+	}
+
+	for (var index in unseenNotifications) {
+		if (unseenNotifications[index] === name) {
 			return false;
 		}
 	}
@@ -157,6 +176,7 @@ function notify(header, body, imageUrl) {
 			icon: imageUrl
 		};
 		var notification = new Notification(header, notificationOptions);
+		return notification;
 	}
 }
 
