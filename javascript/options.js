@@ -24,7 +24,7 @@ function save() {
 	var saveJSON = {whitelistEnabled: whitelistEnabled, whitelist: whitelist, blacklistEnabled: blacklistEnabled, blacklist: blacklist};
 
     chrome.storage.sync.set(saveJSON, function() {
-		window.alert("Changes saved! Refresh any Facebook tabs.");
+		window.alert("Changes saved! Refresh your social media tabs.");
     });
     chrome.extension.sendMessage({text: 'disconnect'}, undefined);
 }

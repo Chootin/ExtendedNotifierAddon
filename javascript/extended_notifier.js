@@ -7,7 +7,7 @@ var blacklist = [];
 
 var notifyTimeout = 120;
 
-var addonName = "Facebook Extended Notifier";
+var addonName = "Extended Notifier";
 var onlineList = [];
 var recentNotifications = [];
 var unseenNotifications = [];
@@ -16,7 +16,7 @@ var personClass = "_42fz";
 var nameSubClass = "_55lr";
 var statusContainerClass = "_568z";
 var imageClass = "_1gyw _55lt";
-var notificationIcon = chrome.extension.getURL('graphics/facebook_notifier_icon.png');
+var notificationIcon = chrome.extension.getURL('graphics/notifier_icon.png');
 
 window.addEventListener("beforeunload", function(e) {
 	chrome.runtime.sendMessage({text: 'My watch has ended.'}, undefined);
@@ -42,7 +42,7 @@ function restoreData(data) {
 
 function initialize() {
 	onlineList = getNameListFromResults(filterResults(checkOnline()));
-	notify(addonName, "Facebook Extended Notifier Active.", notificationIcon);
+	notify(addonName, "Extended Notifier Active.", notificationIcon);
 	console.log("Already online: " + onlineList);
 	window.setTimeout(loop, checkTime);
 }
