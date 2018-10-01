@@ -8,4 +8,4 @@ An add-on for Google Chrome which notifies you when a friend comes online.
 
 Available from the Chrome Web Store at https://chrome.google.com/webstore/detail/facebook-extended-notifie/gbloeanejepelcknjckijleddfibefgf
 
-Disclaimer: The author of this addon is not affiliated with Facebook.
+Please note: The author of this addon is not affiliated with Facebook.
